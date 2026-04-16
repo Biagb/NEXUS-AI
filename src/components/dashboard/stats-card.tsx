@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
-import { LucideIcon } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui';
+import { LucideIcon, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface StatsCardProps {
@@ -23,29 +23,37 @@ export function StatsCard({
   className,
 }: StatsCardProps) {
   return (
-    <Card className={cn('hover:shadow-md transition-shadow', className)}>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium text-gray-500">{title}</CardTitle>
-        <Icon className="h-5 w-5 text-gray-400" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
-        {description && (
-          <p className="text-xs text-gray-500 mt-1">{description}</p>
-        )}
-        {trend && (
-          <div className="flex items-center mt-2">
+    <Card className={cn('card-hover border-[#E2E8F0]/80 bg-white overflow-hidden', className)}>
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between mb-3.5">
+          <p className="text-sm font-medium text-[#475569]">{title}</p>
+          <div className="w-9 h-9 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0]/80 flex items-center justify-center">
+            <Icon className="h-[18px] w-[18px] text-[#475569]" />
+          </div>
+        </div>
+        <div className="text-[30px] font-bold text-[#1E293B] tracking-tight leading-none">{value}</div>
+        <div className="flex items-center gap-2 mt-2.5">
+          {trend && (
             <span
               className={cn(
-                'text-xs font-medium',
-                trend.isPositive ? 'text-green-600' : 'text-red-600'
+                'inline-flex items-center gap-0.5 text-xs font-semibold px-1.5 py-0.5 rounded-md',
+                trend.isPositive 
+                  ? 'text-[#059669] bg-[#10B981]/10' 
+                  : 'text-red-600 bg-red-50'
               )}
             >
-              {trend.isPositive ? '+' : '-'}{Math.abs(trend.value)}%
+              {trend.isPositive ? (
+                <ArrowUpRight className="h-3 w-3" />
+              ) : (
+                <ArrowDownRight className="h-3 w-3" />
+              )}
+              {Math.abs(trend.value)}%
             </span>
-            <span className="text-xs text-gray-500 ml-1">from last month</span>
-          </div>
-        )}
+          )}
+          {description && (
+            <p className="text-xs text-[#64748B]">{description}</p>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

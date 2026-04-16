@@ -6,7 +6,7 @@ import { Badge, Button, Card, CardContent, useToast } from '@/components/ui';
 import { createClient } from '@/lib/supabase/client';
 import { formatDate } from '@/lib/utils';
 import { User, Mail, Phone, Tag, Trash2, Edit2, MoreVertical, UserPlus, Search } from 'lucide-react';
-import { AddSubscriberModal } from './add-subscriber-modal';
+import { AddSubscriberModal } from './index';
 
 interface SubscriberListProps {
   subscribers: Subscriber[];
@@ -69,13 +69,13 @@ export function SubscriberList({ subscribers, onRefresh }: SubscriberListProps) 
       {/* Actions Bar */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
           <input
             type="text"
             placeholder="Search by name, email, phone, or tag..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-[#E2E8F0] rounded-lg focus:ring-2 focus:ring-[#3B82F6]/40 focus:border-[#3B82F6] transition-all text-sm text-[#1E293B] placeholder:text-[#94A3B8]"
           />
         </div>
         <Button onClick={() => setIsAddModalOpen(true)}>
@@ -88,30 +88,30 @@ export function SubscriberList({ subscribers, onRefresh }: SubscriberListProps) 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-4">
-            <p className="text-sm text-gray-500">Total</p>
-            <p className="text-2xl font-bold">{subscribers.length}</p>
+            <p className="text-sm text-[#64748B]">Total</p>
+            <p className="text-2xl font-bold text-[#1E293B]">{subscribers.length}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <p className="text-sm text-gray-500">Active</p>
-            <p className="text-2xl font-bold text-green-600">
+            <p className="text-sm text-[#64748B]">Active</p>
+            <p className="text-2xl font-bold text-[#10B981]">
               {subscribers.filter((s) => s.subscribed).length}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <p className="text-sm text-gray-500">With Email</p>
-            <p className="text-2xl font-bold text-blue-600">
+            <p className="text-sm text-[#64748B]">With Email</p>
+            <p className="text-2xl font-bold text-[#3B82F6]">
               {subscribers.filter((s) => s.email).length}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4">
-            <p className="text-sm text-gray-500">With Phone</p>
-            <p className="text-2xl font-bold text-purple-600">
+            <p className="text-sm text-[#64748B]">With Phone</p>
+            <p className="text-2xl font-bold text-[#8B5CF6]">
               {subscribers.filter((s) => s.phone).length}
             </p>
           </CardContent>
@@ -123,13 +123,13 @@ export function SubscriberList({ subscribers, onRefresh }: SubscriberListProps) 
         <Card>
           <CardContent className="py-12">
             <div className="text-center">
-              <div className="mx-auto w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <User className="h-6 w-6 text-gray-400" />
+              <div className="mx-auto w-12 h-12 bg-[#F1F5F9] rounded-full flex items-center justify-center mb-4">
+                <User className="h-6 w-6 text-[#94A3B8]" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-[#1E293B] mb-2">
                 {searchTerm ? 'No matching subscribers' : 'No subscribers yet'}
               </h3>
-              <p className="text-gray-500 mb-6">
+              <p className="text-[#64748B] mb-6">
                 {searchTerm ? 'Try a different search term' : 'Add your first subscriber to get started'}
               </p>
               {!searchTerm && (
@@ -144,16 +144,16 @@ export function SubscriberList({ subscribers, onRefresh }: SubscriberListProps) 
       ) : (
         <div className="space-y-3">
           {filteredSubscribers.map((subscriber) => (
-            <Card key={subscriber.id} className="hover:shadow-md transition-shadow">
+            <Card key={subscriber.id} className="hover:shadow-md hover:shadow-[#1E293B]/5 transition-all duration-200">
               <CardContent className="py-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-4">
-                    <div className="p-2 bg-gray-100 rounded-full">
-                      <User className="h-5 w-5 text-gray-600" />
+                    <div className="p-2 bg-[#F1F5F9] rounded-full">
+                      <User className="h-5 w-5 text-[#475569]" />
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="font-medium text-gray-900">
+                        <h3 className="font-medium text-[#1E293B]">
                           {subscriber.first_name || subscriber.last_name
                             ? `${subscriber.first_name || ''} ${subscriber.last_name || ''}`.trim()
                             : 'Unnamed Subscriber'}
@@ -162,7 +162,7 @@ export function SubscriberList({ subscribers, onRefresh }: SubscriberListProps) 
                           {subscriber.subscribed ? 'Active' : 'Unsubscribed'}
                         </Badge>
                       </div>
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 mt-1 text-sm text-gray-500">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 mt-1 text-sm text-[#64748B]">
                         {subscriber.email && (
                           <span className="flex items-center gap-1">
                             <Mail className="h-3 w-3" />
@@ -178,7 +178,7 @@ export function SubscriberList({ subscribers, onRefresh }: SubscriberListProps) 
                       </div>
                       {subscriber.tags && subscriber.tags.length > 0 && (
                         <div className="flex items-center gap-1 mt-2">
-                          <Tag className="h-3 w-3 text-gray-400" />
+                          <Tag className="h-3 w-3 text-[#94A3B8]" />
                           <div className="flex flex-wrap gap-1">
                             {subscriber.tags.map((tag) => (
                               <Badge key={tag} variant="outline" className="text-xs">
@@ -188,7 +188,7 @@ export function SubscriberList({ subscribers, onRefresh }: SubscriberListProps) 
                           </div>
                         </div>
                       )}
-                      <p className="text-xs text-gray-400 mt-2">
+                      <p className="text-xs text-[#94A3B8] mt-2">
                         Added {formatDate(subscriber.created_at)}
                       </p>
                     </div>

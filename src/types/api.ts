@@ -46,21 +46,23 @@ export interface OpenAIMarketingResponse {
 }
 
 // =============================================
-// Replicate Types
+// OpenAI Image Generation Types
 // =============================================
-export interface ReplicateInput {
+export interface OpenAIImageGenerationInput {
   prompt: string;
-  num_outputs?: number;
-  aspect_ratio?: string;
-  output_format?: string;
-  output_quality?: number;
+  model?: 'gpt-image-1';
+  n?: number;
+  size?: '1024x1024' | '1536x1024' | '1024x1536' | 'auto';
+  quality?: 'low' | 'medium' | 'high' | 'auto';
 }
 
-export interface ReplicatePrediction {
-  id: string;
-  status: 'starting' | 'processing' | 'succeeded' | 'failed' | 'canceled';
-  output?: string[];
-  error?: string;
+export interface OpenAIImageResponse {
+  created: number;
+  data: Array<{
+    b64_json?: string;
+    url?: string;
+    revised_prompt?: string;
+  }>;
 }
 
 // =============================================

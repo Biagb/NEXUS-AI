@@ -60,15 +60,15 @@ export function SignupForm() {
 
   if (success) {
     return (
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md border-[#E2E8F0]">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Check your email</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-2xl text-[#1E293B]">Check your email</CardTitle>
+          <CardDescription className="text-[#64748B]">
             We&apos;ve sent you a confirmation link to <strong>{email}</strong>
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-[#64748B]">
             Click the link in your email to verify your account and complete the signup process.
           </p>
         </CardContent>
@@ -84,10 +84,10 @@ export function SignupForm() {
   }
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md border-[#E2E8F0]">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Create an account</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-2xl text-[#1E293B]">Create an account</CardTitle>
+        <CardDescription className="text-[#64748B]">
           Start automating your marketing today
         </CardDescription>
       </CardHeader>
@@ -102,7 +102,7 @@ export function SignupForm() {
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#94A3B8]" />
               <Input
                 id="email"
                 type="email"
@@ -118,7 +118,7 @@ export function SignupForm() {
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#94A3B8]" />
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
@@ -131,7 +131,7 @@ export function SignupForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#475569]"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -145,7 +145,7 @@ export function SignupForm() {
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#94A3B8]" />
               <Input
                 id="confirmPassword"
                 type={showPassword ? 'text' : 'password'}
@@ -160,12 +160,12 @@ export function SignupForm() {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full" isLoading={isLoading}>
+          <Button type="submit" className="w-full gradient-ai text-white border-0 shadow-md shadow-blue-500/25" isLoading={isLoading}>
             Create Account
           </Button>
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-[#64748B]">
             Already have an account?{' '}
-            <Link href="/auth/login" className="text-blue-600 hover:underline">
+            <Link href="/auth/login" className="text-[#3B82F6] hover:underline font-medium">
               Sign in
             </Link>
           </p>

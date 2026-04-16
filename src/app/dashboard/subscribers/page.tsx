@@ -43,8 +43,8 @@ export default function SubscribersPage() {
     <div className="p-6 lg:p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Subscribers</h1>
-        <p className="text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-[#1E293B]">Subscribers</h1>
+        <p className="text-[#64748B] mt-1">
           Manage your contacts and subscriber list
         </p>
       </div>

@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AI Marketing Autopilot",
+  title: "NEXUS-AI",
   description: "AI-powered marketing automation for SMEs. Generate compelling email campaigns, SMS messages, and banners with AI.",
 };
 

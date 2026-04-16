@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { SendSMSRequest, SendSMSResponse, ApiResponse } from '@/types';
+import twilio from 'twilio';
 
-// Mock Twilio client for trial/demo purposes
-// In production, you would use: import twilio from 'twilio';
-// const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+// Initialize Twilio client
+const twilioClient = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 export async function POST(request: NextRequest) {
   try {
@@ -88,21 +91,14 @@ export async function POST(request: NextRequest) {
 
     for (const subscriber of subscribers) {
       try {
-        // Mock implementation - in production, use Twilio:
-        // await twilioClient.messages.create({
-        //   body: smsBody,
-        //   from: process.env.TWILIO_PHONE_NUMBER,
-        //   to: subscriber.phone,
-        // });
+        // Send SMS using Twilio
+        await twilioClient.messages.create({
+          body: smsBody,
+          from: process.env.TWILIO_PHONE_NUMBER,
+          to: subscriber.phone,
+        });
 
-        // Simulate sending (mock)
-        console.log(`[MOCK SMS] To: ${subscriber.phone}, Message: ${smsBody}`);
-        
-        // Simulate random failures for demo
-        if (Math.random() > 0.95) {
-          throw new Error('Simulated send failure');
-        }
-        
+        console.log(`[SMS SENT] To: ${subscriber.phone}, Message: ${smsBody.substring(0, 50)}...`);
         sent++;
       } catch (error) {
         failed++;
@@ -131,7 +127,7 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         data: response,
-        message: `SMS messages sent successfully! ${sent} delivered, ${failed} failed. (Mock implementation)`,
+        message: `SMS messages sent successfully! ${sent} delivered, ${failed} failed.`,
       },
       { status: 200 }
     );

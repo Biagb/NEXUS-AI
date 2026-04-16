@@ -13,15 +13,15 @@ interface ToastProps {
 
 function Toast({ id, type, message, onClose }: ToastProps) {
   const icons = {
-    success: <CheckCircle className="h-5 w-5 text-green-500" />,
+    success: <CheckCircle className="h-5 w-5 text-[#10B981]" />,
     error: <AlertCircle className="h-5 w-5 text-red-500" />,
-    info: <Info className="h-5 w-5 text-blue-500" />,
+    info: <Info className="h-5 w-5 text-[#3B82F6]" />,
   };
 
   const bgColors = {
-    success: 'bg-green-50 border-green-200',
+    success: 'bg-[#10B981]/5 border-[#10B981]/20',
     error: 'bg-red-50 border-red-200',
-    info: 'bg-blue-50 border-blue-200',
+    info: 'bg-[#3B82F6]/5 border-[#3B82F6]/20',
   };
 
   React.useEffect(() => {
@@ -40,10 +40,10 @@ function Toast({ id, type, message, onClose }: ToastProps) {
       )}
     >
       {icons[type]}
-      <p className="flex-1 text-sm text-gray-700">{message}</p>
+      <p className="flex-1 text-sm text-[#334155]">{message}</p>
       <button
         onClick={() => onClose(id)}
-        className="text-gray-400 hover:text-gray-600"
+        className="text-[#94A3B8] hover:text-[#475569]"
       >
         <X className="h-4 w-4" />
       </button>

@@ -139,7 +139,7 @@ export function OnboardingWizard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-[#F8FAFC] py-12 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Progress Steps */}
         <div className="mb-8">
@@ -149,8 +149,8 @@ export function OnboardingWizard() {
                 <div
                   className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${
                     currentStep >= step.id
-                      ? 'bg-blue-600 border-blue-600 text-white'
-                      : 'border-gray-300 text-gray-400'
+                      ? 'gradient-ai border-transparent text-white'
+                      : 'border-[#CBD5E1] text-[#94A3B8]'
                   }`}
                 >
                   {currentStep > step.id ? (
@@ -161,8 +161,8 @@ export function OnboardingWizard() {
                 </div>
                 {index < STEPS.length - 1 && (
                   <div
-                    className={`w-full h-1 mx-2 ${
-                      currentStep > step.id ? 'bg-blue-600' : 'bg-gray-200'
+                    className={`w-full h-1 mx-2 rounded-full ${
+                      currentStep > step.id ? 'gradient-ai' : 'bg-[#E2E8F0]'
                     }`}
                     style={{ width: '60px' }}
                   />
@@ -175,7 +175,7 @@ export function OnboardingWizard() {
               <span
                 key={step.id}
                 className={`text-xs ${
-                  currentStep >= step.id ? 'text-blue-600' : 'text-gray-400'
+                  currentStep >= step.id ? 'text-[#3B82F6]' : 'text-[#94A3B8]'
                 }`}
               >
                 {step.title}
@@ -225,7 +225,7 @@ export function OnboardingWizard() {
                     className="mt-1"
                     rows={5}
                   />
-                  <p className="mt-1 text-sm text-gray-500">
+                  <p className="mt-1 text-sm text-[#64748B]">
                     This helps our AI generate more relevant marketing content.
                   </p>
                 </div>
@@ -240,7 +240,7 @@ export function OnboardingWizard() {
                   <Label>Company Logo (optional)</Label>
                   <div className="mt-2 flex items-center gap-4">
                     {logoPreview ? (
-                      <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-gray-200">
+                      <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[#E2E8F0]">
                         <Image
                           src={logoPreview}
                           alt="Logo preview"
@@ -249,8 +249,8 @@ export function OnboardingWizard() {
                         />
                       </div>
                     ) : (
-                      <div className="w-20 h-20 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
-                        <Upload className="w-8 h-8 text-gray-400" />
+                      <div className="w-20 h-20 rounded-lg border-2 border-dashed border-[#CBD5E1] flex items-center justify-center">
+                        <Upload className="w-8 h-8 text-[#94A3B8]" />
                       </div>
                     )}
                     <div>
@@ -262,7 +262,7 @@ export function OnboardingWizard() {
                         className="hidden"
                       />
                       <label htmlFor="logo">
-                        <span className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors border border-gray-300 bg-white shadow-sm hover:bg-gray-50 hover:text-gray-900 h-9 px-4 py-2 cursor-pointer">
+                        <span className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors border border-[#CBD5E1] bg-white shadow-sm hover:bg-[#F8FAFC] hover:text-[#1E293B] h-9 px-4 py-2 cursor-pointer">
                           {logoPreview ? 'Change Logo' : 'Upload Logo'}
                         </span>
                       </label>
@@ -285,7 +285,7 @@ export function OnboardingWizard() {
                             primary: e.target.value,
                           })
                         }
-                        className="w-10 h-10 rounded cursor-pointer border border-gray-200"
+                        className="w-10 h-10 rounded cursor-pointer border border-[#E2E8F0]"
                       />
                       <Input
                         value={formData.brandColors.primary}
@@ -312,7 +312,7 @@ export function OnboardingWizard() {
                             secondary: e.target.value,
                           })
                         }
-                        className="w-10 h-10 rounded cursor-pointer border border-gray-200"
+                        className="w-10 h-10 rounded cursor-pointer border border-[#E2E8F0]"
                       />
                       <Input
                         value={formData.brandColors.secondary}
@@ -359,17 +359,17 @@ export function OnboardingWizard() {
                     options={TONE_OPTIONS.map((tone) => ({ value: tone, label: tone }))}
                     className="mt-1"
                   />
-                  <p className="mt-2 text-sm text-gray-500">
+                  <p className="mt-2 text-sm text-[#64748B]">
                     This defines how the AI will write your marketing content.
                   </p>
                 </div>
 
                 {/* Tone examples */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-sm font-medium text-gray-700 mb-2">
+                <div className="bg-[#F8FAFC] rounded-lg p-4 border border-[#E2E8F0]">
+                  <p className="text-sm font-medium text-[#334155] mb-2">
                     Example with &quot;{formData.toneOfVoice}&quot; tone:
                   </p>
-                  <p className="text-sm text-gray-600 italic">
+                  <p className="text-sm text-[#475569] italic">
                     {getToneExample(formData.toneOfVoice)}
                   </p>
                 </div>

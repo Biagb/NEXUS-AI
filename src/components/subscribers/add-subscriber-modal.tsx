@@ -87,14 +87,14 @@ export function AddSubscriberModal({ isOpen, onClose, onSuccess }: AddSubscriber
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
       
       {/* Modal */}
-      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6">
+      <div className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6 border border-[#E2E8F0]">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold">Add New Subscriber</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <h2 className="text-xl font-semibold text-[#1E293B]">Add New Subscriber</h2>
+          <button onClick={onClose} className="text-[#94A3B8] hover:text-[#475569] transition-colors">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -157,7 +157,7 @@ export function AddSubscriberModal({ isOpen, onClose, onSuccess }: AddSubscriber
               placeholder="new, vip, newsletter"
               className="mt-1"
             />
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-[#64748B]">
               Use tags to segment your subscribers
             </p>
           </div>

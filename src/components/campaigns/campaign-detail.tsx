@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Campaign } from '@/types';
-import { Button, Textarea, Badge, Card, CardHeader, CardTitle, CardContent, useToast, Spinner } from '@/components/ui';
+import { Button, Input, Textarea, Badge, Card, CardHeader, CardTitle, CardDescription, CardContent, useToast } from '@/components/ui';
 import { createClient } from '@/lib/supabase/client';
 import { formatDateTime } from '@/lib/utils';
-import { Mail, MessageSquare, Send, Edit2, Save, X, Trash2, ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import { Mail, MessageSquare, Send, Edit2, Save, X, Trash2, ArrowLeft, Image as ImageIcon, CalendarDays, Users } from 'lucide-react';
 
 interface CampaignDetailProps {
   campaign: Campaign;
@@ -112,158 +112,195 @@ export function CampaignDetail({ campaign: initialCampaign }: CampaignDetailProp
     setIsEditing(false);
   };
 
+  const campaignTypeLabel = campaign.campaign_type === 'email' ? 'Email' : campaign.campaign_type === 'sms' ? 'SMS' : 'Banner';
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <div className="mx-auto max-w-6xl space-y-6">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="space-y-3">
           <Button variant="ghost" onClick={() => router.push('/dashboard/campaigns')}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Campaigns
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{campaign.title}</h1>
-            <p className="text-gray-500 mt-1">
-              Created {formatDateTime(campaign.created_at)}
-            </p>
+            <h1 className="text-2xl font-bold text-[#1E293B]">{campaign.title}</h1>
+            <p className="mt-1 text-[#64748B]">Created {formatDateTime(campaign.created_at)}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex flex-wrap items-center gap-2">
           <Badge variant={statusColors[campaign.status]}>{campaign.status}</Badge>
-          {campaign.campaign_type === 'email' && <Mail className="h-5 w-5 text-gray-400" />}
-          {campaign.campaign_type === 'sms' && <MessageSquare className="h-5 w-5 text-gray-400" />}
-        </div>
-      </div>
+          <Badge variant="outline">{campaignTypeLabel}</Badge>
 
-      {/* Generated Image */}
-      {campaign.generated_image_url && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ImageIcon className="h-5 w-5" />
-              Generated Banner
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-100">
-              <Image
-                src={campaign.generated_image_url}
-                alt="Campaign banner"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Subject Line (for emails) */}
-      {campaign.campaign_type === 'email' && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Subject Line</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isEditing ? (
-              <input
-                type="text"
-                value={editedSubject}
-                onChange={(e) => setEditedSubject(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            ) : (
-              <p className="text-lg font-medium">{campaign.subject_line || 'No subject'}</p>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Content */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Content</CardTitle>
           {campaign.status === 'draft' && !isEditing && (
             <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
-              <Edit2 className="h-4 w-4 mr-2" />
+              <Edit2 className="mr-2 h-4 w-4" />
               Edit
             </Button>
           )}
-        </CardHeader>
-        <CardContent>
-          {isEditing ? (
-            <div className="space-y-4">
-              <Textarea
-                value={editedText}
-                onChange={(e) => setEditedText(e.target.value)}
-                rows={10}
-                className="font-mono"
-              />
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={cancelEdit}>
-                  <X className="h-4 w-4 mr-2" />
-                  Cancel
-                </Button>
-                <Button onClick={handleSave} isLoading={isSaving}>
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="prose max-w-none">
-              <pre className="whitespace-pre-wrap font-sans text-gray-700 bg-gray-50 p-4 rounded-lg">
-                {campaign.generated_text || 'No content'}
-              </pre>
-            </div>
+
+          {campaign.status === 'draft' && (
+            <Button variant="gradient" size="sm" onClick={handleSend} isLoading={isSending}>
+              <Send className="mr-2 h-4 w-4" />
+              Send Campaign
+            </Button>
           )}
-        </CardContent>
-      </Card>
 
-      {/* Actions */}
-      {campaign.status === 'draft' && (
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button
-                className="flex-1"
-                onClick={handleSend}
-                isLoading={isSending}
-              >
-                <Send className="h-4 w-4 mr-2" />
-                Send Campaign
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={handleDelete}
-                isLoading={isDeleting}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
-              </Button>
-            </div>
-            <p className="text-sm text-gray-500 mt-4 text-center">
-              Sending will deliver this campaign to all your active subscribers
-              {campaign.campaign_type === 'email' ? ' via email' : ' via SMS'}.
-            </p>
-          </CardContent>
-        </Card>
-      )}
+          {campaign.status === 'draft' && (
+            <Button variant="destructive" size="sm" onClick={handleDelete} isLoading={isDeleting}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete
+            </Button>
+          )}
+        </div>
+      </div>
 
-      {/* Sent Info */}
-      {campaign.status === 'sent' && (
-        <Card className="bg-green-50 border-green-200">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <p className="text-green-800 font-medium">
-                ✓ Campaign sent on {campaign.sent_at && formatDateTime(campaign.sent_at)}
-              </p>
-              <p className="text-green-600 text-sm mt-1">
-                Delivered to {campaign.recipient_count} recipients
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
+        <div className="space-y-6">
+          {campaign.generated_image_url && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ImageIcon className="h-5 w-5" />
+                  Generated Banner
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-[#F1F5F9]">
+                  <Image
+                    src={campaign.generated_image_url}
+                    alt="Campaign banner"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {campaign.campaign_type === 'email' && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Subject Line</CardTitle>
+                <CardDescription>This line appears in your recipient inbox.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isEditing ? (
+                  <Input
+                    value={editedSubject}
+                    onChange={(e) => setEditedSubject(e.target.value)}
+                    placeholder="Enter campaign subject"
+                  />
+                ) : (
+                  <p className="rounded-lg bg-[#F8FAFC] px-3 py-2 text-base text-[#1E293B]">
+                    {campaign.subject_line || 'No subject line'}
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Campaign Content</CardTitle>
+                <CardDescription>Review and refine the generated content before sending.</CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {isEditing ? (
+                <div className="space-y-4">
+                  <Textarea
+                    value={editedText}
+                    onChange={(e) => setEditedText(e.target.value)}
+                    rows={12}
+                    className="font-mono"
+                  />
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={cancelEdit}>
+                      <X className="mr-2 h-4 w-4" />
+                      Cancel
+                    </Button>
+                    <Button onClick={handleSave} isLoading={isSaving}>
+                      <Save className="mr-2 h-4 w-4" />
+                      Save Changes
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <pre className="whitespace-pre-wrap rounded-xl bg-[#F8FAFC] p-4 font-sans text-[#334155]">
+                  {campaign.generated_text || 'No content generated for this campaign.'}
+                </pre>
+              )}
+            </CardContent>
+          </Card>
+
+          {campaign.status === 'sent' && (
+            <Card className="border-[#10B981]/20 bg-[#10B981]/5">
+              <CardContent className="pt-6">
+                <p className="font-medium text-[#059669]">
+                  Campaign sent on {campaign.sent_at ? formatDateTime(campaign.sent_at) : 'N/A'}
+                </p>
+                <p className="mt-1 text-sm text-[#10B981]">
+                  Delivered to {campaign.recipient_count} recipients
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Overview</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-[#64748B]">Type</span>
+                <span className="inline-flex items-center gap-1.5 font-medium text-[#1E293B]">
+                  {campaign.campaign_type === 'email' && <Mail className="h-4 w-4" />}
+                  {campaign.campaign_type === 'sms' && <MessageSquare className="h-4 w-4" />}
+                  {campaignTypeLabel}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-[#64748B]">Created</span>
+                <span className="inline-flex items-center gap-1.5 font-medium text-[#1E293B]">
+                  <CalendarDays className="h-4 w-4 text-[#94A3B8]" />
+                  {formatDateTime(campaign.created_at)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-[#64748B]">Recipients</span>
+                <span className="inline-flex items-center gap-1.5 font-medium text-[#1E293B]">
+                  <Users className="h-4 w-4 text-[#94A3B8]" />
+                  {campaign.recipient_count}
+                </span>
+              </div>
+              {campaign.sent_at && (
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-[#64748B]">Sent</span>
+                  <span className="font-medium text-[#1E293B]">{formatDateTime(campaign.sent_at)}</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {campaign.status === 'draft' && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Delivery Notice</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-[#64748B]">
+                  Sending will deliver this campaign to all active subscribers
+                  {campaign.campaign_type === 'email' ? ' via email.' : ' via SMS.'}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -43,10 +43,10 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md border-[#E2E8F0]">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Welcome back</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-2xl text-[#1E293B]">Welcome back</CardTitle>
+        <CardDescription className="text-[#64748B]">
           Sign in to your account to continue
         </CardDescription>
       </CardHeader>
@@ -61,7 +61,7 @@ export function LoginForm() {
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#94A3B8]" />
               <Input
                 id="email"
                 type="email"
@@ -77,7 +77,7 @@ export function LoginForm() {
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#94A3B8]" />
               <Input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
@@ -90,7 +90,7 @@ export function LoginForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#475569]"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -103,12 +103,12 @@ export function LoginForm() {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full" isLoading={isLoading}>
+          <Button type="submit" className="w-full gradient-ai text-white border-0 shadow-md shadow-blue-500/25" isLoading={isLoading}>
             Sign In
           </Button>
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-[#64748B]">
             Don&apos;t have an account?{' '}
-            <Link href="/auth/signup" className="text-blue-600 hover:underline">
+            <Link href="/auth/signup" className="text-[#3B82F6] hover:underline font-medium">
               Sign up
             </Link>
           </p>

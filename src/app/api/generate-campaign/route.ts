@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import Replicate from 'replicate';
 import { createClient } from '@/lib/supabase/server';
 import { GenerateCampaignRequest, OpenAIMarketingResponse, ApiResponse, GenerateCampaignResponse, Profile } from '@/types';
 
@@ -14,15 +13,7 @@ function getOpenAIClient() {
   });
 }
 
-// Initialize Replicate client lazily
-function getReplicateClient() {
-  if (!process.env.REPLICATE_API_TOKEN) {
-    throw new Error('REPLICATE_API_TOKEN is not configured');
-  }
-  return new Replicate({
-    auth: process.env.REPLICATE_API_TOKEN,
-  });
-}
+
 
 export async function POST(request: NextRequest) {
   try {
@@ -120,7 +111,7 @@ The content should be professional, engaging, and aligned with the brand's tone 
       );
     }
 
-    // Step 2: Generate image with Replicate (Flux Schnell)
+    // Step 2: Generate image with OpenAI (gpt-image-1)
     let imageUrl: string | null = null;
 
     try {
@@ -130,50 +121,66 @@ Style: Modern, professional marketing banner.
 Colors: Use ${brandColors?.primary || '#3B82F6'} and ${brandColors?.secondary || '#1E40AF'} as accent colors.
 Quality: High resolution, clean design, suitable for email marketing.`;
 
-      const replicate = getReplicateClient();
-      const output = await replicate.run(
-        'black-forest-labs/flux-schnell',
-        {
-          input: {
-            prompt: enhancedImagePrompt,
-            num_outputs: 1,
-            aspect_ratio: '16:9',
-            output_format: 'webp',
-            output_quality: 90,
-          },
-        }
-      );
+      const openai = getOpenAIClient();
+      const imageResponse = await openai.images.generate({
+        model: 'gpt-image-1',
+        prompt: enhancedImagePrompt,
+        n: 1,
+        size: '1536x1024',
+        quality: 'medium',
+      });
 
-      // Flux schnell returns an array of URLs
-      if (Array.isArray(output) && output.length > 0) {
-        const generatedImageUrl = output[0];
+      // OpenAI returns base64 image data
+      if (imageResponse.data && imageResponse.data.length > 0) {
+        const imageData = imageResponse.data[0];
+        
+        if (imageData.b64_json) {
+          // Convert base64 to buffer and upload to Supabase Storage
+          const imageBuffer = Buffer.from(imageData.b64_json, 'base64');
 
-        // Download the image and upload to Supabase Storage
-        const imageResponse = await fetch(generatedImageUrl);
-        const imageBlob = await imageResponse.blob();
-        const imageBuffer = await imageBlob.arrayBuffer();
-
-        const fileName = `${user.id}/${Date.now()}.webp`;
-        const { error: uploadError } = await supabase.storage
-          .from('campaigns')
-          .upload(fileName, imageBuffer, {
-            contentType: 'image/webp',
-            upsert: false,
-          });
-
-        if (!uploadError) {
-          const { data: { publicUrl } } = supabase.storage
+          const fileName = `${user.id}/${Date.now()}.png`;
+          const { error: uploadError } = await supabase.storage
             .from('campaigns')
-            .getPublicUrl(fileName);
-          imageUrl = publicUrl;
-        } else {
-          console.error('Image upload error:', uploadError);
-          // Continue without image if upload fails
-          imageUrl = generatedImageUrl;
+            .upload(fileName, imageBuffer, {
+              contentType: 'image/png',
+              upsert: false,
+            });
+
+          if (!uploadError) {
+            const { data: { publicUrl } } = supabase.storage
+              .from('campaigns')
+              .getPublicUrl(fileName);
+            imageUrl = publicUrl;
+          } else {
+            console.error('Image upload error:', uploadError);
+          }
+        } else if (imageData.url) {
+          // If URL is returned, download and upload to Supabase
+          const response = await fetch(imageData.url);
+          const imageBlob = await response.blob();
+          const imageBuffer = await imageBlob.arrayBuffer();
+
+          const fileName = `${user.id}/${Date.now()}.png`;
+          const { error: uploadError } = await supabase.storage
+            .from('campaigns')
+            .upload(fileName, imageBuffer, {
+              contentType: 'image/png',
+              upsert: false,
+            });
+
+          if (!uploadError) {
+            const { data: { publicUrl } } = supabase.storage
+              .from('campaigns')
+              .getPublicUrl(fileName);
+            imageUrl = publicUrl;
+          } else {
+            console.error('Image upload error:', uploadError);
+            imageUrl = imageData.url;
+          }
         }
       }
-    } catch (replicateError) {
-      console.error('Replicate error:', replicateError);
+    } catch (openaiImageError) {
+      console.error('OpenAI image generation error:', openaiImageError);
       // Continue without image if generation fails
     }
 
