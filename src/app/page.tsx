@@ -1,8 +1,9 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui';
 import { 
-  Sparkles, Mail, BarChart3, ArrowRight, CheckCircle, 
-  Zap, Shield, Clock, Send, Users, Play, Globe, ChevronRight
+  Mail, BarChart3, ArrowRight, CheckCircle, 
+  Shield, Clock, Send, Users, Globe, Zap, Target, Layers
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -13,11 +14,15 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl gradient-ai flex items-center justify-center shadow-sm shadow-blue-500/20 group-hover:shadow-md group-hover:shadow-blue-500/25 transition-shadow">
-                <Zap className="h-4 w-4 text-white" />
-              </div>
-              <span className="text-lg font-bold text-[#1E293B] tracking-tight">NEXUS-AI</span>
+            <Link href="/" className="flex items-center group">
+              <Image
+                src="/LOGO.png"
+                alt="Nexus-AI Logo"
+                width={140}
+                height={45}
+                className="h-10 w-auto object-contain"
+                priority
+              />
             </Link>
 
             {/* Desktop Navigation */}
@@ -60,26 +65,17 @@ export default function HomePage() {
         <div className="absolute inset-0 -z-10 bg-grid opacity-30" />
 
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="animate-fade-in-up inline-flex items-center gap-2 bg-white text-[#475569] px-4 py-2 rounded-full text-sm font-medium mb-8 border border-[#E2E8F0] shadow-sm">
-            <div className="w-5 h-5 rounded-full gradient-ai flex items-center justify-center">
-              <Sparkles className="h-3 w-3 text-white" />
-            </div>
-            AI-Powered Marketing for SMEs
-            <ChevronRight className="h-3.5 w-3.5 text-[#94A3B8]" />
-          </div>
-
           {/* Headline */}
-          <h1 className="animate-fade-in-up delay-100 text-4xl sm:text-5xl lg:text-6xl font-bold text-[#1E293B] leading-[1.1] mb-6 tracking-tight">
-            Write emails automatically{' '}
+          <h1 className="animate-fade-in-up text-4xl sm:text-5xl lg:text-6xl font-bold text-[#1E293B] leading-[1.1] mb-6 tracking-tight">
+            Marketing campaigns{' '}
             <br className="hidden sm:block" />
-            <span className="gradient-ai-text">with AI</span>
+            <span className="gradient-ai-text">made simple</span>
           </h1>
 
           {/* Sub-headline */}
           <p className="animate-fade-in-up delay-200 text-lg sm:text-xl text-[#64748B] mb-10 max-w-2xl mx-auto leading-relaxed">
-            Generate compelling marketing campaigns in seconds. Personalized 
-            emails, SMS messages, and banners — tailored to your brand, powered by AI.
+            Create and send professional email campaigns, SMS messages, and 
+            banners in minutes. Grow your audience and boost your business.
           </p>
 
           {/* CTA Buttons */}
@@ -92,8 +88,7 @@ export default function HomePage() {
             </Link>
             <Link href="#demo">
               <Button variant="outline" size="lg" className="text-base px-8 h-12 rounded-xl border-[#E2E8F0] text-[#1E293B] hover:bg-[#F8FAFC] hover:border-[#CBD5E1] transition-all duration-300 w-full sm:w-auto">
-                <Play className="mr-2 h-4 w-4 text-[#6366F1]" />
-                Watch Demo
+                Learn More
               </Button>
             </Link>
           </div>
@@ -123,14 +118,6 @@ export default function HomePage() {
             Powered by industry-leading technology
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-14 gap-y-8">
-            {/* OpenAI */}
-            <div className="flex items-center gap-2.5 opacity-40 hover:opacity-70 transition-opacity duration-300">
-              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="#1E293B">
-                <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z" />
-              </svg>
-              <span className="text-sm font-semibold text-[#1E293B]">OpenAI</span>
-            </div>
-
             {/* Next.js */}
             <div className="flex items-center gap-2.5 opacity-40 hover:opacity-70 transition-opacity duration-300">
               <svg className="h-5 w-5" viewBox="0 0 180 180" fill="none">
@@ -199,15 +186,11 @@ export default function HomePage() {
       <section id="demo" className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-2 bg-[#F1F5F9] text-[#475569] px-3 py-1.5 rounded-full text-xs font-semibold mb-5 border border-[#E2E8F0]">
-              <Zap className="h-3 w-3 text-[#6366F1]" />
-              See it in action
-            </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-[#1E293B] mb-4 tracking-tight">
-              From idea to email in seconds
+              From idea to campaign in seconds
             </h2>
             <p className="text-lg text-[#64748B] max-w-2xl mx-auto">
-              Watch how NEXUS-AI transforms a simple prompt into a complete, branded email campaign ready to send.
+              See how easy it is to create a complete, branded email campaign ready to send.
             </p>
           </div>
 
@@ -237,10 +220,13 @@ export default function HomePage() {
                 {/* Sidebar mockup */}
                 <div className="hidden sm:flex w-56 bg-[#F8FAFC] border-r border-[#E2E8F0] flex-col p-4">
                   <div className="flex items-center gap-2 mb-8">
-                    <div className="w-7 h-7 rounded-lg gradient-ai flex items-center justify-center">
-                      <Zap className="h-3.5 w-3.5 text-white" />
-                    </div>
-                    <span className="text-sm font-bold text-[#1E293B]">NEXUS-AI</span>
+                    <Image
+                      src="/LOGO.png"
+                      alt="Nexus-AI"
+                      width={100}
+                      height={32}
+                      className="h-7 w-auto object-contain"
+                    />
                   </div>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#94A3B8] text-xs">
@@ -266,7 +252,7 @@ export default function HomePage() {
                 <div className="flex-1 p-6 sm:p-8">
                   <div className="mb-6">
                     <h3 className="text-lg font-bold text-[#1E293B]">Create New Campaign</h3>
-                    <p className="text-xs text-[#94A3B8]">Let AI generate compelling marketing content</p>
+                    <p className="text-xs text-[#94A3B8]">Generate compelling marketing content</p>
                   </div>
 
                   {/* Form mockup */}
@@ -284,8 +270,8 @@ export default function HomePage() {
                       </div>
                     </div>
                     <button className="w-full h-11 rounded-lg gradient-ai text-white text-sm font-medium flex items-center justify-center gap-2 shadow-md shadow-blue-500/25">
-                      <Sparkles className="h-4 w-4" />
-                      Generate with AI
+                      <Target className="h-4 w-4" />
+                      Generate Campaign
                     </button>
 
                     {/* Generated result preview */}
@@ -294,7 +280,7 @@ export default function HomePage() {
                         <div className="w-5 h-5 rounded-full bg-[#10B981]/10 flex items-center justify-center">
                           <CheckCircle className="h-3 w-3 text-[#10B981]" />
                         </div>
-                        <span className="text-xs font-medium text-[#10B981]">AI Generated Successfully</span>
+                        <span className="text-xs font-medium text-[#10B981]">Campaign Generated Successfully</span>
                       </div>
                       <div className="text-xs text-[#475569] leading-relaxed">
                         <strong>Subject:</strong> 🔥 Summer Sale: 30% Off Everything!<br />
@@ -313,15 +299,11 @@ export default function HomePage() {
       <section id="features" className="py-24 px-4 sm:px-6 lg:px-8 bg-[#F8FAFC]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-white text-[#475569] px-3 py-1.5 rounded-full text-xs font-semibold mb-5 border border-[#E2E8F0] shadow-sm">
-              <Shield className="h-3 w-3 text-[#6366F1]" />
-              Built for growth
-            </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-[#1E293B] mb-4 tracking-tight">
               Everything you need to grow
             </h2>
             <p className="text-lg text-[#64748B] max-w-2xl mx-auto">
-              Powerful AI tools designed specifically for small and medium businesses
+              All the tools you need to create, manage, and send marketing campaigns that convert
             </p>
           </div>
 
@@ -329,10 +311,10 @@ export default function HomePage() {
             {/* Feature 1 */}
             <div className="bg-white p-8 rounded-2xl border border-[#E2E8F0] card-hover group">
               <div className="w-12 h-12 rounded-xl gradient-ai flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-sm shadow-blue-500/20">
-                <Sparkles className="h-6 w-6 text-white" />
+                <Layers className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-lg font-semibold text-[#1E293B] mb-2">
-                AI Content Generation
+                Smart Content Generation
               </h3>
               <p className="text-[#64748B] text-sm leading-relaxed">
                 Generate compelling email copy, SMS messages, and marketing banners 
@@ -375,15 +357,11 @@ export default function HomePage() {
       <section id="how-it-works" className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-[#F1F5F9] text-[#475569] px-3 py-1.5 rounded-full text-xs font-semibold mb-5 border border-[#E2E8F0]">
-              <Clock className="h-3 w-3 text-[#6366F1]" />
-              Quick setup
-            </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-[#1E293B] mb-4 tracking-tight">
               Up and running in 3 steps
             </h2>
             <p className="text-lg text-[#64748B]">
-              From sign-up to your first AI campaign in under 5 minutes
+              From sign-up to your first campaign in under 5 minutes
             </p>
           </div>
 
@@ -411,7 +389,7 @@ export default function HomePage() {
                 Describe Your Campaign
               </h3>
               <p className="text-sm text-[#64748B] leading-relaxed max-w-xs mx-auto">
-                Enter a simple topic like &quot;Summer Sale&quot; and let AI generate the perfect marketing content.
+                Enter a simple topic like &quot;Summer Sale&quot; and the platform generates the perfect marketing content.
               </p>
             </div>
 
@@ -423,7 +401,7 @@ export default function HomePage() {
                 Review &amp; Send
               </h3>
               <p className="text-sm text-[#64748B] leading-relaxed max-w-xs mx-auto">
-                Review your AI-generated content, make tweaks if needed, and deliver to your audience instantly.
+                Review your generated content, make tweaks if needed, and deliver to your audience instantly.
               </p>
             </div>
           </div>
@@ -462,15 +440,11 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-purple-500/8 to-transparent rounded-full blur-3xl" />
 
         <div className="max-w-3xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white/10 text-white/80 px-4 py-2 rounded-full text-xs font-semibold mb-8 border border-white/10 backdrop-blur-sm">
-            <Sparkles className="h-3.5 w-3.5" />
-            Get started today
-          </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-5 tracking-tight leading-tight">
-            Ready to automate your marketing?
+            Ready to grow your business?
           </h2>
           <p className="text-lg text-[#94A3B8] mb-10 max-w-xl mx-auto leading-relaxed">
-            Join SMEs that use AI to write better campaigns, save time, and grow their business.
+            Start creating professional marketing campaigns today. Free to get started, no credit card required.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/auth/signup">
@@ -504,13 +478,16 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg gradient-ai flex items-center justify-center shadow-sm">
-                <Zap className="h-3.5 w-3.5 text-white" />
-              </div>
-              <span className="font-bold text-white tracking-tight">NEXUS-AI</span>
+              <Image
+                src="/LOGO.png"
+                alt="Nexus-AI"
+                width={110}
+                height={35}
+                className="h-8 w-auto object-contain brightness-0 invert"
+              />
             </div>
             <p className="text-[#475569] text-sm">
-              © 2026 NEXUS-AI. All rights reserved.
+              © 2026 Nexus-AI. All rights reserved.
             </p>
           </div>
         </div>

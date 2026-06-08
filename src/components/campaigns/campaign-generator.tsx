@@ -82,15 +82,10 @@ export function CampaignGenerator() {
     <Card className="mx-auto max-w-4xl">
       <CardHeader className="space-y-4 border-b border-[#E2E8F0]">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="outline" className="gap-1">
-            <Sparkles className="h-3.5 w-3.5" />
-            AI powered
-          </Badge>
           <Badge variant="secondary">Campaign Builder</Badge>
         </div>
         <div>
           <CardTitle className="flex items-center gap-2">
-            <Wand2 className="h-5 w-5 text-[#4F46E5]" />
             Create Your Next Campaign
           </CardTitle>
           <CardDescription className="mt-2">
@@ -175,7 +170,6 @@ export function CampaignGenerator() {
             isLoading={isGenerating}
             disabled={!topic.trim() || isGenerating}
           >
-            <Sparkles className="mr-2 h-4 w-4" />
             {isGenerating ? 'Generating with AI...' : 'Generate Campaign'}
           </Button>
         </CardFooter>

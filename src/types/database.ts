@@ -138,6 +138,21 @@ export interface CampaignAnalytics {
 }
 
 // =============================================
+// SUBSCRIPTIONS (Stripe Billing)
+// =============================================
+export type SubscriptionStatus = 'active' | 'trialing' | 'canceled' | 'past_due' | 'incomplete' | 'incomplete_expired' | 'unpaid' | 'paused';
+
+export interface Subscription {
+  id: string;              // Stripe Subscription ID (sub_...)
+  user_id: string;
+  status: SubscriptionStatus;
+  price_id: string;        // Stripe Price ID to identify plan tier
+  current_period_end: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// =============================================
 // DATABASE SCHEMA TYPE (for Supabase client)
 // =============================================
 export interface Database {
@@ -162,6 +177,11 @@ export interface Database {
         Row: CampaignAnalytics;
         Insert: Omit<CampaignAnalytics, 'id' | 'created_at' | 'updated_at'>;
         Update: Partial<Omit<CampaignAnalytics, 'id' | 'campaign_id' | 'created_at' | 'updated_at'>>;
+      };
+      subscriptions: {
+        Row: Subscription;
+        Insert: Omit<Subscription, 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<Subscription, 'id' | 'created_at' | 'updated_at'>>;
       };
     };
   };
