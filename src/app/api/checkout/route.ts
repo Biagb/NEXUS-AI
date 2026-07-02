@@ -37,6 +37,11 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
+      subscription_data: {
+        metadata: {
+          user_id: user.id,
+        },
+      },
       // Embed user info for the webhook to link subscription → user
       metadata: {
         user_id: user.id,

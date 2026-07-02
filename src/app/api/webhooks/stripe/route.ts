@@ -45,6 +45,35 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const upsertSubscriptionForUser = async (
+      subscription: Stripe.Subscription,
+      userId: string
+    ) => {
+      const priceId = subscription.items.data[0]?.price?.id || '';
+
+      const { error } = await supabase
+        .from('subscriptions')
+        .upsert(
+          {
+            id: subscription.id,
+            user_id: userId,
+            status: subscription.status,
+            price_id: priceId,
+            current_period_end: new Date((subscription.items.data[0]?.current_period_end ?? 0) * 1000).toISOString(),
+          },
+          {
+            onConflict: 'user_id',
+          }
+        );
+
+      if (error) {
+        console.error(`Error upserting subscription ${subscription.id} for user ${userId}:`, error);
+        return false;
+      }
+
+      return true;
+    };
+
     switch (event.type) {
       // ─── Initial subscription creation (after successful checkout) ───
       case 'checkout.session.completed': {
@@ -63,23 +92,8 @@ export async function POST(request: NextRequest) {
             session.subscription as string
           );
 
-          const priceId = subscription.items.data[0]?.price?.id;
-
-          const { error } = await supabase
-            .from('subscriptions')
-            .upsert({
-              id: subscription.id,
-              user_id: userId,
-              status: subscription.status,
-              price_id: priceId || '',
-              current_period_end: new Date((subscription.items.data[0]?.current_period_end ?? 0) * 1000).toISOString(),
-            }, {
-              onConflict: 'user_id',
-            });
-
-          if (error) {
-            console.error('Error upserting subscription from checkout:', error);
-          } else {
+          const ok = await upsertSubscriptionForUser(subscription, userId);
+          if (ok) {
             console.log(`Subscription ${subscription.id} created for user ${userId}`);
           }
         }
@@ -89,32 +103,31 @@ export async function POST(request: NextRequest) {
       // ─── Subscription updated (renewal, plan change, etc.) ───
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription;
-        const priceId = subscription.items.data[0]?.price?.id;
+        const metadataUserId = subscription.metadata?.user_id;
 
-        // Find existing subscription by Stripe subscription ID
+        if (metadataUserId) {
+          const ok = await upsertSubscriptionForUser(subscription, metadataUserId);
+          if (ok) {
+            console.log(`Subscription ${subscription.id} updated to status: ${subscription.status}`);
+          }
+          break;
+        }
+
+        // Fallback for subscriptions created before metadata support
         const { data: existingSub } = await supabase
           .from('subscriptions')
           .select('user_id')
           .eq('id', subscription.id)
           .single();
 
-        if (existingSub) {
-          const { error } = await supabase
-            .from('subscriptions')
-            .update({
-              status: subscription.status,
-              price_id: priceId || '',
-              current_period_end: new Date((subscription.items.data[0]?.current_period_end ?? 0) * 1000).toISOString(),
-            })
-            .eq('id', subscription.id);
-
-          if (error) {
-            console.error('Error updating subscription:', error);
-          } else {
-            console.log(`Subscription ${subscription.id} updated to status: ${subscription.status}`);
-          }
-        } else {
+        if (!existingSub) {
           console.warn(`No existing subscription found for Stripe ID: ${subscription.id}`);
+          break;
+        }
+
+        const ok = await upsertSubscriptionForUser(subscription, existingSub.user_id);
+        if (ok) {
+          console.log(`Subscription ${subscription.id} updated to status: ${subscription.status}`);
         }
         break;
       }

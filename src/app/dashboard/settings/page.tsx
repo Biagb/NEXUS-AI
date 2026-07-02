@@ -121,23 +121,56 @@ export default function SettingsPage() {
 
   // ─── Read tab from URL search params ──────────────────────────────
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const tab = params.get('tab');
-    if (tab === 'billing') setActiveTab('billing');
+    const handleBillingReturn = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab');
+      if (tab === 'billing') setActiveTab('billing');
 
-    // Show success toast on return from Stripe checkout
-    const sessionId = params.get('session_id');
-    if (sessionId) {
-      addToast('success', 'Subscription activated successfully! 🎉');
-      // Clean URL
-      window.history.replaceState({}, '', '/dashboard/settings?tab=billing');
-    }
+      const sessionId = params.get('session_id');
+      if (sessionId) {
+        try {
+          const client = createClient();
+          const response = await fetch('/api/checkout/confirm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId }),
+          });
 
-    const canceled = params.get('canceled');
-    if (canceled) {
-      addToast('info', 'Checkout was canceled');
-      window.history.replaceState({}, '', '/dashboard/settings?tab=billing');
-    }
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || 'Failed to confirm checkout session');
+          }
+
+          const { data: { user } } = await client.auth.getUser();
+          if (user) {
+            const { data: subData } = await client
+              .from('subscriptions')
+              .select('*')
+              .eq('user_id', user.id)
+              .single();
+
+            if (subData) {
+              setSubscription(subData as Subscription);
+            }
+          }
+
+          addToast('success', 'Subscription upgraded successfully!');
+        } catch (error) {
+          console.error('Checkout confirmation error:', error);
+          addToast('error', error instanceof Error ? error.message : 'Failed to sync subscription');
+        } finally {
+          window.history.replaceState({}, '', '/dashboard/settings?tab=billing');
+        }
+      }
+
+      const canceled = params.get('canceled');
+      if (canceled) {
+        addToast('info', 'Checkout was canceled');
+        window.history.replaceState({}, '', '/dashboard/settings?tab=billing');
+      }
+    };
+
+    handleBillingReturn();
   }, [addToast]);
 
   // ─── Fetch profile + subscription data ────────────────────────────

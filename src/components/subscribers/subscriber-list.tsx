@@ -5,7 +5,7 @@ import { Subscriber } from '@/types';
 import { Badge, Button, Card, CardContent, useToast } from '@/components/ui';
 import { createClient } from '@/lib/supabase/client';
 import { formatDate } from '@/lib/utils';
-import { User, Mail, Phone, Tag, Trash2, Edit2, MoreVertical, UserPlus, Search } from 'lucide-react';
+import { User, Mail, Phone, Tag, Trash2, UserPlus, Search, X } from 'lucide-react';
 import { AddSubscriberModal } from './index';
 
 interface SubscriberListProps {
@@ -19,6 +19,7 @@ export function SubscriberList({ subscribers, onRefresh }: SubscriberListProps) 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [subscriberToDelete, setSubscriberToDelete] = useState<Subscriber | null>(null);
 
   const filteredSubscribers = subscribers.filter((sub) => {
     const searchLower = searchTerm.toLowerCase();
@@ -31,14 +32,16 @@ export function SubscriberList({ subscribers, onRefresh }: SubscriberListProps) 
     );
   });
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this subscriber?')) return;
-    
+  const handleDelete = async () => {
+    if (!subscriberToDelete) return;
+
+    const id = subscriberToDelete.id;
     setDeletingId(id);
     try {
       const { error } = await supabase.from('subscribers').delete().eq('id', id);
       if (error) throw error;
       addToast('success', 'Subscriber deleted');
+      setSubscriberToDelete(null);
       onRefresh();
     } catch (error) {
       console.error('Delete error:', error);
@@ -204,7 +207,7 @@ export function SubscriberList({ subscribers, onRefresh }: SubscriberListProps) 
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleDelete(subscriber.id)}
+                      onClick={() => setSubscriberToDelete(subscriber)}
                       disabled={deletingId === subscriber.id}
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
@@ -227,6 +230,62 @@ export function SubscriberList({ subscribers, onRefresh }: SubscriberListProps) 
           onRefresh();
         }}
       />
+
+      {subscriberToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => {
+              if (deletingId !== subscriberToDelete.id) {
+                setSubscriberToDelete(null);
+              }
+            }}
+          />
+
+          <div className="relative bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6 border border-[#E2E8F0]">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-[#1E293B]">Delete subscriber?</h2>
+              <button
+                onClick={() => setSubscriberToDelete(null)}
+                disabled={deletingId === subscriberToDelete.id}
+                className="text-[#94A3B8] hover:text-[#475569] transition-colors disabled:opacity-50"
+                aria-label="Close"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <p className="text-sm text-[#64748B] mb-6">
+              Are you sure you want to delete{' '}
+              <span className="font-medium text-[#1E293B]">
+                {subscriberToDelete.first_name || subscriberToDelete.last_name
+                  ? `${subscriberToDelete.first_name || ''} ${subscriberToDelete.last_name || ''}`.trim()
+                  : subscriberToDelete.email || subscriberToDelete.phone || 'this subscriber'}
+              </span>
+              ? This action cannot be undone.
+            </p>
+
+            <div className="flex gap-3 justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setSubscriberToDelete(null)}
+                disabled={deletingId === subscriberToDelete.id}
+              >
+                No
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={handleDelete}
+                isLoading={deletingId === subscriberToDelete.id}
+              >
+                Yes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
